@@ -1,0 +1,11 @@
+@SistemaGestionTurnos.API_HostAddress = http://localhost:5234
+
+GET {{SistemaGestionTurnos.API_HostAddress}}/api/turnos
+Accept: application/json
+
+###
+
+GET {{SistemaGestionTurnos.API_HostAddress}}/api/turnos
+Accept: application/json
+
+###
