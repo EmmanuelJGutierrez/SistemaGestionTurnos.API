@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SistemaGestionTurnos.API.Data;
 using SistemaGestionTurnos.API.Models;
@@ -6,6 +8,7 @@ using SistemaGestionTurnos.API.Models;
 namespace SistemaGestionTurnos.API.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class ReservasController : ControllerBase
     {
@@ -18,10 +21,30 @@ namespace SistemaGestionTurnos.API.Controllers
 
         // GET api/reservas
         [HttpGet]
+        [Authorize (Roles = "Admin")]
         public async Task<ActionResult<List<Reserva>>> Get()
         {
             return await _context.Reservas
                 .Include(r => r.Usuario)
+                .Include(r => r.Turno)
+                    .ThenInclude(t => t.Especialista)
+                .ToListAsync();
+        }
+        // GET api/reservas/mis-reservas
+        [HttpGet("mis-reservas")]
+        [Authorize]
+        public async Task<ActionResult<List<Reserva>>> GetMisReservas()
+        {
+            // Leer el ID del usuario desde el token
+            var usuarioIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (usuarioIdClaim == null)
+                return Unauthorized();
+
+            var usuarioId = int.Parse(usuarioIdClaim);
+
+            return await _context.Reservas
+                .Where(r => r.UsuarioId == usuarioId)
                 .Include(r => r.Turno)
                     .ThenInclude(t => t.Especialista)
                 .ToListAsync();

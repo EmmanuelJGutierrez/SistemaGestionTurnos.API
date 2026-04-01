@@ -60,19 +60,5 @@ namespace SistemaGestionTurnos.API.Controllers
             await _context.SaveChangesAsync();
             return NoContent();
         }
-
-        // DELETE api/turnos/1 - Elimina un turno
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var turno = await _context.Turnos.FindAsync(id);
-
-            if (turno == null)
-                return NotFound();
-
-            _context.Turnos.Remove(turno);
-            await _context.SaveChangesAsync();
-            return NoContent();
-        }
     }
 }

@@ -42,9 +42,8 @@ namespace SistemaGestionTurnos.API.Controllers
             {
                 return NotFound();
             }
-            return Ok(especialista);
+            return (especialista);
         }
-
 
         // PUT: api/especialistas/{id}. Actualiza un especialista existente.
         [HttpPut("{id}")]
@@ -53,18 +52,6 @@ namespace SistemaGestionTurnos.API.Controllers
             if (id != especialista.Id)
                 return BadRequest();
             _context.Entry(especialista).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            return NoContent();
-        }
-
-        // DELETE: api/especialistas/{id}. Elimina un especialista por su ID.
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete (int id)
-        {
-            var especialista = await _context.Especialistas.FindAsync(id);
-            if (especialista == null)
-                return NotFound();
-            _context.Especialistas.Remove(especialista);
             await _context.SaveChangesAsync();
             return NoContent();
         }
